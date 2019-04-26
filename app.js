@@ -2,6 +2,13 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+
+const productRoutes = require('./api/routes/products')
+const orderRoutes = require('./api/routes/orders')
+
+// Connect to DB
+mongoose.connect('mongodb+srv://etech:' + process.env.MONGO_ATLAS_PW +'@cluster0-wkkqz.mongodb.net/test?retryWrites=true', { useNewUrlParser: true })
 
 // Set up morgan to log files activites
 app.use(morgan('dev'))
@@ -11,25 +18,14 @@ app.use(bodyParser.json())
 
 // Set up Cross Origin Resource Sharing CORS and Handle CORS errors
 app.use((req, res, next) => {
-    res.header(
-        "Access-Control-Allow-Origin",
-        "*"
-    )
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    )
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header( 'Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     if (req.method === 'OPTIONS') {
-        res.header(
-            "Access-Control-Allow-Methods",
-            "PUT, POST, PATCH, DELETE, GET"
-        )
-        return res.status(200).json({})
+        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+        return res.status(200).json({});
     }
-})
-
-const productRoutes = require('./api/routes/products')
-const orderRoutes = require('./api/routes/orders')
+    next();
+});
 
 // Routes which should handle requests
 app.use('/products', productRoutes)
