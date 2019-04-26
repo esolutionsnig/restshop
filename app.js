@@ -9,6 +9,8 @@ const orderRoutes = require('./api/routes/orders')
 
 // Connect to DB
 mongoose.connect('mongodb+srv://etech:' + process.env.MONGO_ATLAS_PW +'@cluster0-wkkqz.mongodb.net/test?retryWrites=true', { useNewUrlParser: true })
+// Use default node js promise implementation
+mongoose.Promise = global.Promise
 
 // Set up morgan to log files activites
 app.use(morgan('dev'))
