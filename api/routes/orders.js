@@ -5,10 +5,16 @@ const mongoose = require('mongoose')
 const Order = require('../models/orders')
 const Product = require('../models/products')
 
-// Handle incoming GET request to /orders
+/**
+ * Handle incoming GET request to /orders
+ * The populate method allows you fetch data from a foreign table
+ * It takes a second parameter of columns u want to return
+*/
+
 router.get('/', (req, res, next) => {
   Order.find()
   .select('product quantity _id')
+  .populate('product', 'name')
   .exec()
   .then(docs => {
     res.status(200).json({
@@ -77,6 +83,7 @@ router.post('/', (req, res, next) => {
 // Get Single Order
 router.get('/:orderId', (req, res, next) => {
   Order.findById(req.params.orderId)
+    .populate('product')
     .exec()
     .then(order => {
       res.status(200).json({
