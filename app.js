@@ -14,6 +14,8 @@ mongoose.Promise = global.Promise
 
 // Set up morgan to log files activites
 app.use(morgan('dev'))
+// Middleware to enable folder to be publicly available
+app.use('/uploads', express.static('uploads'))
 // Use body parser to format what is sent as feedback from api
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
